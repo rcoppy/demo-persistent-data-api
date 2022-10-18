@@ -1,4 +1,4 @@
-package com.alexrupp.models;
+package com.alexrupp.persistentdataapi.models;
 
 import java.util.Date;
 
@@ -18,27 +18,31 @@ public class Message {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="sender_id")
-    private User sender; 
+    private ChatUser sender; 
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="recipient_id")
-    private User recipient; 
+    private ChatUser recipient; 
 
     private String contents; 
     private Date created_at;
 
-    public Message(User sender, User recipient, String contents) {
+    public Message() {
+
+    }
+
+    public Message(ChatUser sender, ChatUser recipient, String contents) {
         this.sender = sender; 
         this.recipient = recipient; 
         this.contents = contents; 
         this.created_at = new Date();
     }
 
-    public User GetSender() {
+    public ChatUser GetSender() {
         return sender; 
     }
 
-    public User GetRecipient() {
+    public ChatUser GetRecipient() {
         return recipient; 
     }
 

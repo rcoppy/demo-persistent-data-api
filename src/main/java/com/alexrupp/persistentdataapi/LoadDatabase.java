@@ -6,20 +6,23 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.alexrupp.models.User;
-import com.alexrupp.repositories.UserRepository;
+import com.alexrupp.persistentdataapi.models.ChatUser;
+import com.alexrupp.persistentdataapi.repositories.ChatUserRepository;
 
 @Configuration
 class LoadDatabase {
 
-  private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
+    private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
-  @Bean
-  CommandLineRunner initDatabase(UserRepository repository) {
+    @Bean
+    CommandLineRunner initDatabase(ChatUserRepository repository) {
 
-    return args -> {
-      log.info("Preloading " + repository.save(new User("Bilbo Baggins", "burglar")));
-      log.info("Preloading " + repository.save(new User("Frodo Baggins", "thief")));
-    };
-  }
+        return args -> {
+            if (repository.findAll().isEmpty()) {
+                log.info("Preloading " + repository.save(new ChatUser("alex", "pancakes")));
+                log.info("Preloading " + repository.save(new ChatUser("leo", "omelettes")));
+                log.info("Preloading " + repository.save(new ChatUser("erika", "waffles")));
+            }
+        };
+    }
 }

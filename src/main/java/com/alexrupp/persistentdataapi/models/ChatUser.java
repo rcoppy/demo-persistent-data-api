@@ -1,4 +1,4 @@
-package com.alexrupp.models;
+package com.alexrupp.persistentdataapi.models;
 
 import java.util.List;
 
@@ -6,17 +6,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @Entity
-public class User {
+public class ChatUser { // 'User' is a reserved keyword by DBMS
 
     @Id
     @GeneratedValue
-    private Long user_id;
+    private Long chatUserId;
 
     private String handle;
-    private String bcrypt_hash; 
+    private String bcryptHash; 
+    private String bcryptSalt; 
 
     @OneToMany(mappedBy = "sender")
     private List<Message> sentMessages; 
@@ -24,20 +26,25 @@ public class User {
     @OneToMany(mappedBy = "recipient")
     private List<Message> receivedMessages; 
 
-    public User(String username, String password) {
+    public ChatUser() {
+
+    }
+
+    public ChatUser(String username, String password) {
         this.handle = username;
-        this.bcrypt_hash = BCrypt.hashpw(password, username); 
+        this.bcryptSalt = BCrypt.gensalt(); 
+        this.bcryptHash = BCrypt.hashpw(password, this.bcryptSalt); 
     }
 
     public boolean ValidatePassword(String password) {
-        return BCrypt.hashpw(password, this.handle).equals(this.bcrypt_hash);
+        return BCrypt.checkpw(password, bcryptHash);
     }
 
     public String GetHandle() {
         return this.handle; 
     }
 
-    public Long GetUserId() {
-        return this.user_id;
+    public Long GetChatUserId() {
+        return this.chatUserId;
     }
 }
